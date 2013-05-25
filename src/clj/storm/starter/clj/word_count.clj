@@ -1,21 +1,8 @@
 (ns storm.starter.clj.word-count
-  (:require [taoensso.carmine :as car])
   (:import [backtype.storm StormSubmitter LocalCluster])
-  (:use [backtype.storm clojure config])
+  (:use [backtype.storm clojure config]
+           [utils.redis])
   (:gen-class))
-
-; REDIS related stuff
-(def pool         (car/make-conn-pool)) ; See docstring for additional options
-(def spec-server1 (car/make-conn-spec))
-
-(defmacro wcar [& body] `(car/with-conn pool spec-server1 ~@body))
-
-(defn lpop-from-redis[key-value]
-  (wcar (car/lpop key-value)))
-
-(defn rpush-from-redis[list-name value]
-  (wcar (car/rpush list-name value)))
-
 
 (defspout sentence-spout ["sentence"]
   [conf context collector]

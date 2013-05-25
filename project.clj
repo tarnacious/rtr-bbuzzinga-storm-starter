@@ -1,5 +1,6 @@
 (defproject storm-starter "0.0.1-SNAPSHOT"
   :source-paths ["src/clj"]
+  :test-paths ["test/clj"]
   :java-source-paths ["src/jvm"]
   :resource-paths ["multilang"]
   :aot :all
