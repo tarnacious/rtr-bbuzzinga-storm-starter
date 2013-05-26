@@ -7,9 +7,9 @@
 (defspout sentence-spout ["sentence"]
   [conf context collector]
   (let [sentences [
-                          (lpop-from-redis "mylist")
-                          (lpop-from-redis "mylist")
-                          (lpop-from-redis "mylist")
+                          (lpop-redis "mylist")
+                          (lpop-redis "mylist")
+                          (lpop-redis "mylist")
                           ]
             ]
     (spout

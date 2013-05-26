@@ -4,15 +4,10 @@
   :java-source-paths ["src/jvm"]
   :resource-paths ["multilang"]
   :aot :all
-  :repositories {
-;;                 "twitter4j" "http://twitter4j.org/maven2"
-                 }
-
   :dependencies [
-;;                 [org.twitter4j/twitter4j-core "2.2.6-SNAPSHOT"]
-;;                 [org.twitter4j/twitter4j-stream "2.2.6-SNAPSHOT"]
                    [commons-collections/commons-collections "3.2.1"]
                    [com.taoensso/carmine "1.7.0"]
+                   [clojurewerkz/elastisch "1.1.0"]
                  ]
 
   :profiles {:dev
