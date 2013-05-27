@@ -12,3 +12,4 @@
 
 (defn rpush-redis[list-name value]
   (wcar (car/rpush list-name value)))
+

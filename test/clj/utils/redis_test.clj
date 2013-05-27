@@ -1,6 +1,12 @@
 (ns utils.redis-test
 	(:use [utils.redis]
-		[clojure.test]))
+	        [utils.io]
+	        [clojure.test]))
+
+(deftest test-push-to-redis-file
+	;(process-file "./resources/list-20130525-090000.txt" process-line 0)
+	(process-file "./resources/list-20130525-100000.txt" process-line 0)
+	(is (= 1 1)))
 
 ; Test requires a local running redis instance
 (deftest test-lpushredis
