@@ -2,7 +2,10 @@
 	(:use [utils.elastisch]
 		[clojure.test]))
 
-; Test requires a local running redis instance
 (deftest test-connect
-	(let [result (connect "http://127.0.0.1" 9300)]
+	(let [result (http_connect "http://localhost:9200")]
 		(is (= 1 1))))
+
+(deftest test-query
+	(let [result (wiki_title_query "GP32")]
+		(is (= 3 (count result)))))
