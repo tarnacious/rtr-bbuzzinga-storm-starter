@@ -32,7 +32,7 @@
 (defn mk-topology []
   (topology
    {"1" (spout-spec sentence-spout)}
-   {"2" (bolt-spec {"1" :shuffle} word-bolt :p 5)}
+   {"2" (bolt-spec {"1" ["words"]} word-bolt :p 2)}
     ))
 
 (defn run-local! []
