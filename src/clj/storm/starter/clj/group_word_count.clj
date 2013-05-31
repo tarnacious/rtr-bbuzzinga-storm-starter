@@ -18,11 +18,16 @@
         ))))
 
 
-(defbolt word-bolt ["word"] [tuple collector]
-  (let [word (.getString tuple 0)]
-    (println word)
-    (ack! collector tuple)
-    ))
+(defbolt word-bolt ["word"] {:prepare true}
+  [conf tuple collector]
+   (let [counts (atom {})]
+     (bolt
+       (execute [tuple]
+        (let [word (.getString tuple 0)]
+          (swap! counts (partial merge-with +) {word 1})
+          (println counts)
+          (ack! collector tuple)
+          )))))
 
 (defn mk-topology []
   (topology
