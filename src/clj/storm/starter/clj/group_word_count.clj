@@ -1,11 +1,10 @@
 (ns storm.starter.clj.group-word-count
-  (:import [backtype.storm StormSubmitter LocalCluster])
-  (:use [backtype.storm clojure config])
-  (:gen-class))
+  (:import [backtype.storm StormSubmitter LocalCluster Constants])
+  (:use [backtype.storm clojure config]))
 
 (defspout sentence-spout ["words"]
   [conf context collector]
-  (let [words ["pink" "purple" "elephant" "dance" "rockstart"]]
+  (let [words ["pink" "purple" "elephant" "dance" "beached"]]
     (spout
      (nextTuple []
        (Thread/sleep 100)
@@ -17,23 +16,46 @@
         ;; This is an unreliable spout, so it does nothing here
         ))))
 
+(defn isTick [tuple]
+  (let [sourceComponent (.getSourceComponent tuple)
+        systemComponent (Constants/SYSTEM_COMPONENT_ID)
+        sourceStream (.getSourceStreamId tuple)
+        systemStream (Constants/SYSTEM_TICK_STREAM_ID)]
+    (and (.equals sourceComponent systemComponent)
+         (.equals sourceStream systemStream))))
 
-(defbolt word-bolt ["word"] {:prepare true}
+
+(defbolt word-bolt ["word"] {
+  :conf {"topology.tick.tuple.freq.secs", 2}
+  :prepare true }
   [conf tuple collector]
    (let [counts (atom {})]
      (bolt
        (execute [tuple]
-        (let [word (.getString tuple 0)]
-          (swap! counts (partial merge-with +) {word 1})
-          (println counts)
-          (ack! collector tuple)
-          )))))
+         (cond (isTick tuple)
+             (emit-bolt! collector [(deref counts)])
+         :else
+         (do (let [word (.getString tuple 0)]
+             (swap! counts (partial merge-with +) {word 1})
+               ))
+               )))))
+
+(defbolt aggregate-bolt ["word-counts"] {:prepare true}
+  [conf tuple collector]
+   (let [counts (atom {})]
+     (bolt
+       (execute [tuple]
+          (let [dict (.getValueByField tuple "word")]
+            (swap! counts merge dict)
+            (println counts)
+           ))
+       )))
 
 (defn mk-topology []
   (topology
    {"1" (spout-spec sentence-spout)}
-   {"2" (bolt-spec {"1" ["words"]} word-bolt :p 2)}
-    ))
+   {"2" (bolt-spec {"1" ["words"]} word-bolt :p 1)
+    "3" (bolt-spec {"2" :shuffle} aggregate-bolt :p 1)}))
 
 (defn run-local! []
   (let [cluster (LocalCluster.)]
