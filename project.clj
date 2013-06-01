@@ -3,6 +3,7 @@
   :test-paths ["test/clj"]
   :java-source-paths ["src/jvm"]
   :resource-paths ["multilang"]
+  :main cli
   :aot :all
   :dependencies [
                    [commons-collections/commons-collections "3.2.1"]
