@@ -1,1 +1,0 @@
-([:dependencies ([commons-collections/commons-collections "3.2.1"] [com.taoensso/carmine "1.7.0"] [storm/storm "0.8.2"] [org.clojure/clojure "1.4.0"] [org.thnetos/cd-client "0.3.6" :exclusions ([org.clojure/clojure])] [org.clojure/tools.nrepl "0.2.1" :exclusions ([org.clojure/clojure])] [clojure-complete/clojure-complete "0.2.2" :exclusions ([org.clojure/clojure])])])
