@@ -1,7 +1,9 @@
-(ns cli)
+(ns cli
+(:use [utils.wikiclicks]))
+
 
 (defn -main
   [& args]
-  (println "main")
+  (distribute "pagecount/out.txt")
   )
 

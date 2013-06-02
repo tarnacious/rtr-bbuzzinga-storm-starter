@@ -10,6 +10,7 @@
                    [com.taoensso/carmine "1.7.0"]
                    [clojurewerkz/elastisch "1.1.0"]
                    [clj-http "0.7.2"]
+                   [org.jeromq/jeromq "0.2.0"]
                  ]
 
   :profiles {:dev

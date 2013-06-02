@@ -1,8 +1,25 @@
 (ns storm.starter.clj.group-word-count
   (:import [backtype.storm StormSubmitter LocalCluster Constants])
+  (:require [utils.zhelpers :as mq])
   (:use [backtype.storm clojure config]))
 
-(defspout sentence-spout ["words"]
+(defspout zmq-line-spout ["words"]
+  [conf context collector]
+  (let [subscriber (-> 1 mq/context (mq/socket mq/sub))]
+    (spout
+     (nextTuple []
+       (mq/connect subscriber "tcp://localhost:5556")
+       (mq/subscribe subscriber)
+       (let [string (mq/recv-str subscriber)]
+         (emit-spout! collector [string])
+       ))
+     (ack [id]
+        ;; You only need to define this method for reliable spouts
+        ;; (such as one that reads off of a queue like Kestrel)
+        ;; This is an unreliable spout, so it does nothing here
+        ))))
+
+(defspout test-line-spout ["words"]
   [conf context collector]
   (let [words ["pink" "purple" "elephant" "dance" "beached"]]
     (spout
@@ -53,7 +70,7 @@
 
 (defn mk-topology []
   (topology
-   {"1" (spout-spec sentence-spout)}
+   {"1" (spout-spec zmq-line-spout)}
    {"2" (bolt-spec {"1" ["words"]} word-bolt :p 1)
     "3" (bolt-spec {"2" :shuffle} aggregate-bolt :p 1)}))
 
