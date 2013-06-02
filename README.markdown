@@ -33,7 +33,7 @@ it down a ZMQ socket.
 6. Pass to sorting bolt TODO.
 7. Push to top results somewhere, ZMQ? TODO.
 
-The data source reads lines for a file ./pagecounts/out.txt (not included)
+The data source reads lines from a file ./pagecounts/out.txt (not included)
 and pushes them down a ZMQ socket. It can be started with:
 
 ```
