@@ -26,9 +26,9 @@ simple program included to read data from a file and push
 it down a ZMQ socket.
 
 1. Spout reads words from ZMQ (or test-line-spout)
-2. Groups words by word to word bolt 
-3. Word bolt keeps dict count for each unique word
-4. Word bolt periodically emits dict or counts
+2. Groups words by field to word bolts 
+3. Word bolt keeps dict of unique word and count
+4. Word bolt periodically emits dict of counts
 5. Aggregation bolt combines dicts from word bolts into a big dict
 6. Pass to sorting bolt TODO.
 7. Push to top results somewhere, ZMQ? TODO.
