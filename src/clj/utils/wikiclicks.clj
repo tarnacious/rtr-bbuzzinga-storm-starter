@@ -6,11 +6,14 @@
 
 
 (defn distribute [filename]
-  (let [publisher (-> 1 mq/context (mq/socket mq/pub))]
-    (mq/bind publisher "tcp://*:5556")
+  (let [socket (-> 1 mq/context (mq/socket mq/rep))]
+    (mq/bind socket "tcp://*:5556")
     (with-open [rdr (reader filename)]
       (doseq [line (line-seq rdr)]
-        (println line)
-        (mq/send publisher line)))
-      ))
+        (let [req (mq/recv-str socket)]
+          (mq/send socket line))
+          )
+      )
+    (println "DONE")
+    ))
 

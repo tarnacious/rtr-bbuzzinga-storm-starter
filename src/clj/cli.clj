@@ -4,6 +4,6 @@
 
 (defn -main
   [& args]
-  (distribute "pagecount/out.txt")
+  (distribute "words.txt")
   )
 
